@@ -43,7 +43,7 @@ exports.login = async (req, res) => {
         const userId = user[0];
         const role = user[7];
         const token = generateToken(userId, role);
-        res.cookie('token', token, { httpOnly: true });
+        res.cookie('token', token);
 
         res.json({ message: 'Login successful' });
     }

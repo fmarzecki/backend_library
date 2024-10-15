@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/authRoutes');
 // const userRoutes = require('./routes/userRoutes');
@@ -6,9 +7,13 @@ const authRoutes = require('./routes/authRoutes');
 require('dotenv').config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT;
 
 app.use(express.json());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 app.use(cookieParser());
 
 // Routes
