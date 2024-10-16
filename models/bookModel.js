@@ -1,4 +1,5 @@
 const getConnection = require('../config/db');
+const BookDTO = require('../dto/bookDTO');
 
 exports.getBooksPaginated = async (filter, filterBy, page = 0, size = 8) => {
     const connection = await getConnection();
@@ -14,14 +15,7 @@ exports.getBooksPaginated = async (filter, filterBy, page = 0, size = 8) => {
 
     const result = await connection.execute(query);
 
-    const books = result.rows.map((row) => ({
-        bookId: row[0],
-        title: row[1],
-        bookAuthor: row[2],
-        bookCategory: row[3],
-        imageUrl: row[4],
-        description: row[5]
-    }));
+    const books = BookDTO.fromEntities(result.rows);
 
     const totalQuery = `SELECT COUNT(*) FROM Book WHERE 1=1`;
     const totalResult = await connection.execute(totalQuery);
@@ -30,4 +24,19 @@ exports.getBooksPaginated = async (filter, filterBy, page = 0, size = 8) => {
         books,
         totalPages: Math.ceil(totalResult.rows[0] / size)
     };
+};
+
+exports.getBookById = async (bookId) => {
+    const result = await db.query(`SELECT * FROM Book WHERE bookId = ${bookId}`);
+    return result.rows.length ? result.rows[0] : null;
+};
+
+exports.getFreeBookCopyByBookId = async (bookId) => {
+    const result = await db.query('SELECT * FROM BookCopy WHERE bookId = :bookId AND rentalStatus = :rentalStatus', [bookId, 'FREE']);
+    return result.rows.length ? result.rows[0] : null;
+};
+
+exports.reserveBookCopy = async (bookCopy) => {
+    await db.query('UPDATE BookCopy SET rentalStatus = :rentalStatus, readerId = :readerId WHERE copyId = :copyId',
+        [bookCopy.rentalStatus, bookCopy.readerId, bookCopy.copyId]);
 };
