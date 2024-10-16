@@ -27,16 +27,11 @@ exports.getBooksPaginated = async (filter, filterBy, page = 0, size = 8) => {
 };
 
 exports.getBookById = async (bookId) => {
-    const result = await db.query(`SELECT * FROM Book WHERE bookId = ${bookId}`);
-    return result.rows.length ? result.rows[0] : null;
-};
-
-exports.getFreeBookCopyByBookId = async (bookId) => {
-    const result = await db.query('SELECT * FROM BookCopy WHERE bookId = :bookId AND rentalStatus = :rentalStatus', [bookId, 'FREE']);
-    return result.rows.length ? result.rows[0] : null;
-};
-
-exports.reserveBookCopy = async (bookCopy) => {
-    await db.query('UPDATE BookCopy SET rentalStatus = :rentalStatus, readerId = :readerId WHERE copyId = :copyId',
-        [bookCopy.rentalStatus, bookCopy.readerId, bookCopy.copyId]);
+    const connection = await getConnection();
+    let result = await connection.execute(`SELECT * FROM Book WHERE bookId = ${bookId}`);
+    let books = null;
+    if (result.rows.length) {
+        books = BookDTO.fromEntities(result.rows);
+    }
+    return books;
 };

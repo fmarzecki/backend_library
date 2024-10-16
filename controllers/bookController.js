@@ -1,4 +1,6 @@
-const { getBooksPaginated, getBookById, getFreeBookCopyByBookId, reserveBookCopy } = require('../models/bookModel');
+const { getBooksPaginated, getBookById } = require('../models/bookModel');
+const { getFreeBookCopyByBookId, reserveBookCopy } = require('../models/bookCopyModel');
+const { addRental } = require('../models/rentalModel');
 
 exports.getBooksPaginated = async (req, res) => {
     try {
@@ -19,24 +21,21 @@ exports.reserveBook = async (req, res) => {
     const { bookId } = req.body;
     const userId = req.userId
     try {
-        const book = await getBookById(bookId);
+        console.log(req.userId);
+        let book = await getBookById(bookId);
         if (!book) {
             return res.status(404).json({ message: 'Book not found' });
         }
-
-        const freeCopy = await getFreeBookCopyByBookId(bookId);
+        console.log("Got book");
+        let freeCopy = await getFreeBookCopyByBookId(bookId);
         if (!freeCopy) {
             return res.status(404).json({ message: 'No free book copies found' });
         }
-
-        // Zarezerwuj książkę
-        freeCopy.rentalStatus = 'Reserved'; // lub odpowiednia wartość dla zarezerwowanej kopii
-        freeCopy.readerId = readerId; // Przypisanie ID czytelnika
-
-        // Zapisz zmiany w bazie
+        console.log("Got copy");
         await reserveBookCopy(freeCopy);
+        console.log("Reserved copy");
 
-        return res.status(200).json({ message: 'Book copy reserved', bookCopy: freeCopy });
+        return res.status(200).json({ message: 'Book copy reserved' });
     }
     catch (error) {
         console.error('Error reserving book:', error);
