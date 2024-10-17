@@ -1,5 +1,5 @@
 const { deleteReservation } = require('../models/reservationModel');
-const { addRental, getActiveRentalsByReaderIdExtra, returnRental } = require('../models/rentalModel');
+const { addRental, getActiveRentalsByReaderIdExtra, returnRental, getReturnedRentalsByReaderIdExtra, getReturnedRentalsByReaderIdPaginatedExtra, getActiveRentalsByReaderIdPaginatedExtra } = require('../models/rentalModel');
 const { getBookCopyByCopyId, updateRentalStatus } = require('../models/bookCopyModel');
 const { getUserByEmail } = require('../models/userModel');
 const { getReaderByUserId } = require('../models/readerModel');
@@ -31,7 +31,7 @@ exports.rentBook = async (req, res) => {
     }
 };
 
-exports.getReservationsForUserEmail = async (req, res) => {
+exports.getRentalsForUserEmail = async (req, res) => {
     try {
         const { email } = req.body;
 
@@ -73,3 +73,57 @@ exports.returnBook = async (req, res) => {
         return res.status(500).json({ message: 'Error returning book', error });
     }
 }
+
+exports.getActiveRentalsPaginated = async (req, res) => {
+    try {
+        const { filter, filterBy, page, size } = req.body;
+
+        let userId = req.userId;
+
+        let reader = await getReaderByUserId(userId);
+        if (!reader) {
+            return res.status(404).json({ message: 'Reader not found' });
+        }
+
+        let rentals = await getActiveRentalsByReaderIdPaginatedExtra(filter, filterBy, page, size, reader.readerId);
+        if (!rentals) {
+            rentals = []
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: rentals
+        });
+    }
+    catch (error) {
+        console.error('Error retrieving user rentals:', error);
+        return res.status(500).json({ message: 'Error retrieving user rentals', error });
+    }
+};
+
+exports.getReturnedRentalsPaginated = async (req, res) => {
+    try {
+        const { filter, filterBy, page, size } = req.body;
+
+        let userId = req.userId;
+
+        let reader = await getReaderByUserId(userId);
+        if (!reader) {
+            return res.status(404).json({ message: 'Reader not found' });
+        }
+
+        let rentals = await getReturnedRentalsByReaderIdPaginatedExtra(filter, filterBy, page, size, reader.readerId);
+        if (!rentals) {
+            rentals = []
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: rentals
+        });
+    }
+    catch (error) {
+        console.error('Error retrieving user rentals:', error);
+        return res.status(500).json({ message: 'Error retrieving user rentals', error });
+    }
+};
