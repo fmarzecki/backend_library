@@ -34,7 +34,7 @@ exports.addBook = async ({ title, bookCategory, imageUrl, bookAuthor, descriptio
         const query = `INSERT INTO book (title, bookCategory, imageUrl, bookAuthor, description) 
                        VALUES (:title, :bookCategory, :imageUrl, :bookAuthor, :description)`;
         const params = { title, bookCategory, imageUrl, bookAuthor, description };
-        await connection.execute(query, params);
+        await connection.execute(query, params, { autoCommit: true });
 
     } catch (error) {
         console.error("Error adding book:", error); // Wyświetlenie błędu w konsoli

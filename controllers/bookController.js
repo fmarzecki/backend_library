@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-const { getBooksPaginated, addBook } = require('../models/bookModel');
-=======
-const { getBooksPaginated, getBookById } = require('../models/bookModel');
+const { getBooksPaginated, getBookById, addBook } = require('../models/bookModel');
 const { getFreeBookCopyByBookId, reserveBookCopy } = require('../models/bookCopyModel');
 const { addRental } = require('../models/rentalModel');
 const { addReservation } = require('../models/reservationModel');
->>>>>>> 246b22f94a5b90283c8f4f08ce2461b6fe146618
 
 exports.getBooksPaginated = async (req, res) => {
     try {
@@ -22,7 +18,6 @@ exports.getBooksPaginated = async (req, res) => {
     }
 };
 
-<<<<<<< HEAD
 exports.addBook = async (req, res) => {
     try {
         const { title, bookCategory, imageUrl, bookAuthor, description } = req.body;
@@ -44,7 +39,6 @@ exports.addBook = async (req, res) => {
         res.status(500).json({ message: 'Error adding book', error });
     }
 };
-=======
 exports.reserveBook = async (req, res) => {
     let { bookId } = req.body;
     let userId = req.userId
@@ -70,4 +64,3 @@ exports.reserveBook = async (req, res) => {
     }
 };
 
->>>>>>> 246b22f94a5b90283c8f4f08ce2461b6fe146618
