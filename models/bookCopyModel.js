@@ -1,3 +1,4 @@
+const { autoCommit } = require('oracledb');
 const getConnection = require('../config/db');
 const BookCopyDTO = require('../dto/bookCopyDTO');
 
@@ -14,6 +15,5 @@ exports.getFreeBookCopyByBookId = async (bookId) => {
 exports.reserveBookCopy = async (bookCopy) => {
     const connection = await getConnection();
     const reservationStatus = 'RESERVED';
-    console.log(`UPDATE BookCopy SET rentalStatus = '${reservationStatus}' WHERE copyId = ${bookCopy.copyId}`)
-    await connection.execute(`UPDATE BookCopy SET rentalStatus = '${reservationStatus}' WHERE copyId = ${bookCopy.copyId}`);
+    await connection.execute(`UPDATE BookCopy SET rentalStatus = '${reservationStatus}' WHERE copyId = ${bookCopy.copyId}`, [], { autoCommit: true });
 };
