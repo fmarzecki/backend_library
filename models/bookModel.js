@@ -26,6 +26,24 @@ exports.getBooksPaginated = async (filter, filterBy, page = 0, size = 8) => {
     };
 };
 
+exports.addBook = async ({ title, bookCategory, imageUrl, bookAuthor, description }) => {
+    const connection = await getConnection();
+
+    try {
+        // Użyj prepared statement do wstawienia nowej książki z bindowaniem parametrów
+        const query = `INSERT INTO book (title, bookCategory, imageUrl, bookAuthor, description) 
+                       VALUES (:title, :bookCategory, :imageUrl, :bookAuthor, :description)`;
+        const params = { title, bookCategory, imageUrl, bookAuthor, description };
+        await connection.execute(query, params, { autoCommit: true });
+
+    } catch (error) {
+        console.error("Error adding book:", error); // Wyświetlenie błędu w konsoli
+        throw error; // Rzucenie błędu, aby można go było obsłużyć w innym miejscu
+    } finally {
+        connection.release(); // Upewnij się, że połączenie jest zwolnione po użyciu
+    }
+}
+
 exports.getBookById = async (bookId) => {
     const connection = await getConnection();
     let result = await connection.execute(`SELECT * FROM Book WHERE bookId = ${bookId}`);

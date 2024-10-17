@@ -7,6 +7,9 @@ const bookRoutes = require('./routes/bookRoutes');
 const rentalRoutes = require('./routes/rentalRoutes')
 const readerRoutes = require('./routes/readerRoutes')
 const reservationRoutes = require('./routes/reservationRoutes');
+const newsRoutes = require('./routes/newsRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+
 require('dotenv').config();
 
 const app = express();
@@ -26,6 +29,8 @@ app.use('/books', bookRoutes);
 app.use('/reservations', reservationRoutes);
 app.use('/rentals', rentalRoutes);
 app.use('/readers', readerRoutes)
+app.use('/news', newsRoutes);
+app.use('/admin', adminRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

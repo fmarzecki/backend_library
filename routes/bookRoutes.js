@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { getBooksPaginated, reserveBook } = require('../controllers/bookController');
+const bookController = require('../controllers/bookController');
 const { authenticateToken, authorizeRoles } = require('../middleware/authMiddleware');
-const { rolesEnum } = require('../utils/rolesEnum');
+const { rolesEnum } = require('../utils/rolesEnum')
 
-router.post('/getAllPaginated', authenticateToken, authorizeRoles(rolesEnum.USER), getBooksPaginated);
-router.post('/reserveBook', authenticateToken, authorizeRoles(rolesEnum.USER), reserveBook);
+router.post('/getAllPaginated', authenticateToken, authorizeRoles(rolesEnum.EMPLOYEE, rolesEnum.USER), bookController.getBooksPaginated);
+router.post('/save',authenticateToken, authorizeRoles(rolesEnum.EMPLOYEE), bookController.addBook);
 
 module.exports = router;

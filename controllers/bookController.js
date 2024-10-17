@@ -1,6 +1,5 @@
-const { getBooksPaginated, getBookById } = require('../models/bookModel');
+const { getBooksPaginated, getBookById, addBook } = require('../models/bookModel');
 const { getFreeBookCopyByBookId, updateRentalStatus } = require('../models/bookCopyModel');
-const { addRental } = require('../models/rentalModel');
 const { addReservation } = require('../models/reservationModel');
 const { getReaderByUserId } = require('../models/readerModel');
 
@@ -19,6 +18,27 @@ exports.getBooksPaginated = async (req, res) => {
     }
 };
 
+exports.addBook = async (req, res) => {
+    try {
+        const { title, bookCategory, imageUrl, bookAuthor, description } = req.body;
+
+        // Validate required fields
+        if (!title || !bookCategory || !imageUrl || !bookAuthor || !description) {
+            return res.status(400).json({ message: 'All fields are required.' });
+        }
+
+        // Call the model function to add the book
+        const newBook = await addBook({ title, bookCategory, imageUrl, bookAuthor, description });
+
+        res.status(201).json({
+            success: true,
+            data: newBook,
+        });
+    } catch (error) {
+        console.error('Error adding book:', error);
+        res.status(500).json({ message: 'Error adding book', error });
+    }
+};
 exports.reserveBook = async (req, res) => {
     let { bookId } = req.body;
     let userId = req.userId
