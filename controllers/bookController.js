@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 const { getBooksPaginated, addBook } = require('../models/bookModel');
+=======
+const { getBooksPaginated, getBookById } = require('../models/bookModel');
+const { getFreeBookCopyByBookId, reserveBookCopy } = require('../models/bookCopyModel');
+const { addRental } = require('../models/rentalModel');
+const { addReservation } = require('../models/reservationModel');
+>>>>>>> 246b22f94a5b90283c8f4f08ce2461b6fe146618
 
 exports.getBooksPaginated = async (req, res) => {
     try {
@@ -15,6 +22,7 @@ exports.getBooksPaginated = async (req, res) => {
     }
 };
 
+<<<<<<< HEAD
 exports.addBook = async (req, res) => {
     try {
         const { title, bookCategory, imageUrl, bookAuthor, description } = req.body;
@@ -36,3 +44,33 @@ exports.addBook = async (req, res) => {
         res.status(500).json({ message: 'Error adding book', error });
     }
 };
+=======
+exports.reserveBook = async (req, res) => {
+    let { bookId } = req.body;
+    let userId = req.userId
+    try {
+        console.log(req.userId);
+        let book = await getBookById(bookId);
+        if (!book) {
+            return res.status(404).json({ message: 'Book not found' });
+        }
+        console.log("Got book");
+        let freeCopy = await getFreeBookCopyByBookId(bookId);
+        if (!freeCopy) {
+            return res.status(404).json({ message: 'No free book copies found' });
+        }
+        console.log("Got copy");
+        await reserveBookCopy(freeCopy);
+        console.log("Reserved copy");
+        await addReservation(userId, freeCopy);
+        console.log("Added shit");
+
+        return res.status(200).json({ message: 'Book copy reserved' });
+    }
+    catch (error) {
+        console.error('Error reserving book:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+>>>>>>> 246b22f94a5b90283c8f4f08ce2461b6fe146618
