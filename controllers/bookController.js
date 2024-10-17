@@ -1,6 +1,7 @@
 const { getBooksPaginated, getBookById } = require('../models/bookModel');
 const { getFreeBookCopyByBookId, reserveBookCopy } = require('../models/bookCopyModel');
 const { addRental } = require('../models/rentalModel');
+const { addReservation } = require('../models/reservationModel');
 
 exports.getBooksPaginated = async (req, res) => {
     try {
@@ -18,8 +19,8 @@ exports.getBooksPaginated = async (req, res) => {
 };
 
 exports.reserveBook = async (req, res) => {
-    const { bookId } = req.body;
-    const userId = req.userId
+    let { bookId } = req.body;
+    let userId = req.userId
     try {
         console.log(req.userId);
         let book = await getBookById(bookId);
@@ -34,6 +35,8 @@ exports.reserveBook = async (req, res) => {
         console.log("Got copy");
         await reserveBookCopy(freeCopy);
         console.log("Reserved copy");
+        await addReservation(userId, freeCopy);
+        console.log("Added shit");
 
         return res.status(200).json({ message: 'Book copy reserved' });
     }

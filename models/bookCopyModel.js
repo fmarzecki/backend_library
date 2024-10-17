@@ -1,4 +1,3 @@
-const { autoCommit } = require('oracledb');
 const getConnection = require('../config/db');
 const BookCopyDTO = require('../dto/bookCopyDTO');
 
