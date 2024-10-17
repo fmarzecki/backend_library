@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/authRoutes');
-// const userRoutes = require('./routes/userRoutes');
+const userRoutes = require('./routes/userRoutes');
 const bookRoutes = require('./routes/bookRoutes');
 require('dotenv').config();
 
@@ -18,7 +18,7 @@ app.use(cookieParser());
 
 // Routes
 app.use('/auth', authRoutes);
-// app.use('/users', userRoutes);
+app.use('/users', userRoutes);
 app.use('/books', bookRoutes);
 
 app.listen(PORT, () => {

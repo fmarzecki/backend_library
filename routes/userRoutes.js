@@ -1,9 +1,10 @@
-// const express = require('express');
-// const { getUserProfile, updateUserProfile } = require('../controllers/userController');
-// const authenticate = require('../middleware/authMiddleware');
-// const router = express.Router();
+const express = require('express');
+const router = express.Router();
+const { getUserProfile, changeUserPassword } = require('../controllers/userController');
+const { authenticateToken, authorizeRoles } = require('../middleware/authMiddleware');;
+const { rolesEnum } = require('../utils/rolesEnum')
 
-// router.get('/profile', authenticate, getUserProfile);
-// router.put('/profile', authenticate, updateUserProfile);
+router.get('/getUserProfile', authenticateToken, authorizeRoles(rolesEnum.USER), getUserProfile);
+router.put('/updateUserPassword', authenticateToken, authorizeRoles(rolesEnum.USER), changeUserPassword);
 
-// module.exports = router;
+module.exports = router;
