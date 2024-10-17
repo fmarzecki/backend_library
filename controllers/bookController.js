@@ -22,21 +22,18 @@ exports.reserveBook = async (req, res) => {
     let { bookId } = req.body;
     let userId = req.userId
     try {
-        console.log(req.userId);
         let book = await getBookById(bookId);
         if (!book) {
             return res.status(404).json({ message: 'Book not found' });
         }
-        console.log("Got book");
+
         let freeCopy = await getFreeBookCopyByBookId(bookId);
         if (!freeCopy) {
             return res.status(404).json({ message: 'No free book copies found' });
         }
-        console.log("Got copy");
+
         await reserveBookCopy(freeCopy);
-        console.log("Reserved copy");
         await addReservation(userId, freeCopy);
-        console.log("Added shit");
 
         return res.status(200).json({ message: 'Book copy reserved' });
     }

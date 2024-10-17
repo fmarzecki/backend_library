@@ -9,13 +9,18 @@ exports.register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const connection = await getConnection();
 
+        let doesEmailExist = await connection.execute(`SELECT * FROM USERS WHERE email = '${email}'`);
+        if (doesEmailExist.rows.length) {
+            return res.status(409).json({ message: 'User already exist' })
+        }
+
         await connection.execute(
             `INSERT INTO Users (name, surname, email, phoneNumber, password) VALUES (:name, :surname, :email, :phoneNumber, :password)`,
             [name, surname, email, phoneNumber, hashedPassword],
             { autoCommit: true }
         );
 
-        res.status(201).json({ message: 'User registered successfully' });
+        res.status(200).json({ message: 'User registered successfully' });
     }
     catch (error) {
         res.status(500).json({ error: 'Registration failed', details: error.message });
