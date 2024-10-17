@@ -1,5 +1,5 @@
 class RentalDTO {
-    constructor({ rentalId, rentalDate, returnDate, status, readerId, bookCopyId, returnDateExpected }) {
+    constructor({ rentalId, rentalDate, returnDate = null, status, readerId, bookCopyId, returnDateExpected, book = null }) {
         this.rentalId = rentalId;
         this.rentalDate = rentalDate;
         this.returnDate = returnDate;
@@ -7,6 +7,7 @@ class RentalDTO {
         this.readerId = readerId;
         this.bookCopyId = bookCopyId;
         this.returnDateExpected = returnDateExpected;
+        this.book = book;
     }
 
     static fromEntity(rentalEntity) {

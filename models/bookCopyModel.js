@@ -11,8 +11,19 @@ exports.getFreeBookCopyByBookId = async (bookId) => {
     return bookCopies;
 };
 
-exports.reserveBookCopy = async (bookCopy) => {
+exports.getBookCopyByCopyId = async (copyId) => {
     const connection = await getConnection();
-    const reservationStatus = 'RESERVED';
-    await connection.execute(`UPDATE BookCopy SET rentalStatus = '${reservationStatus}' WHERE copyId = ${bookCopy.copyId}`, [], { autoCommit: true });
+
+    let result = await connection.execute(`SELECT * FROM BookCopy WHERE copyId = ${copyId}`);
+
+    let bookCopy = null;
+    if (result.rows.length) {
+        bookCopy = BookCopyDTO.fromEntity(result.rows[0]);
+    }
+    return bookCopy;
+};
+
+exports.updateRentalStatus = async (bookCopy, rentalStatus) => {
+    const connection = await getConnection();
+    await connection.execute(`UPDATE BookCopy SET rentalStatus = '${rentalStatus}' WHERE copyId = ${bookCopy.copyId}`, [], { autoCommit: true });
 };

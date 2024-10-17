@@ -20,6 +20,14 @@ exports.register = async (req, res) => {
             { autoCommit: true }
         );
 
+        let userId = connection.execute(`SELECT id from USERS WHERE email = '${email}'`);
+
+        await connection.execute(
+            `INSERT INTO Reader (userId) VALUES (:userId)`,
+            [userId],
+            { autoCommit: true }
+        );
+
         res.status(200).json({ message: 'User registered successfully' });
     }
     catch (error) {

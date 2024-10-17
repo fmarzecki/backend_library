@@ -1,5 +1,20 @@
-const { getCurrentUser, updateUserPassword } = require('../models/userModel');
+const { getCurrentUser, updateUserPassword, getUsersPaginated } = require('../models/userModel');
 const bcrypt = require('bcryptjs');
+
+exports.getUsersPaginated = async (req, res) => {
+    try {
+        const { filter, filterBy, page, size } = req.body;
+
+        const users = await getUsersPaginated(filter, filterBy, page, size);
+
+        res.status(200).json({
+            success: true,
+            data: users
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error retrieving paginated users', error });
+    }
+};
 
 exports.getUserProfile = async (req, res) => {
     try {
