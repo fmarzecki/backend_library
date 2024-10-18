@@ -45,7 +45,8 @@ exports.getReadersPaginated = async (filter, filterBy, page = 0, size = 8) => {
             phoneNumber: row[5],
             password: row[6],
             imageUrl: row[7],
-            role: row[8]
+            role: row[8],
+            isBlocked: row[9]
         });
 
         const readerDTO = ReaderDTO.fromEntity(row);

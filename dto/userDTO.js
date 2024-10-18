@@ -1,5 +1,5 @@
 class UserDTO {
-    constructor({ id, name, surname, email, phoneNumber, password, imageUrl, role }) {
+    constructor({ id, name, surname, email, phoneNumber, password, imageUrl, role, isBlocked }) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -8,6 +8,7 @@ class UserDTO {
         this.password = password;
         this.imageUrl = imageUrl;
         this.role = role;
+        this.isBlocked = isBlocked;
     }
 
     static fromEntity(userEntity) {
@@ -20,6 +21,7 @@ class UserDTO {
             password: userEntity[5],
             imageUrl: userEntity[6],
             role: userEntity[7],
+            isBlocked: userEntity[8]
         });
     }
 

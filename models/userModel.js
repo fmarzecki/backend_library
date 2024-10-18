@@ -76,3 +76,29 @@ exports.getUserByEmail = async (email) => {
     const result = await connection.execute('SELECT * FROM users WHERE email = :email', { email });
     return result.rows[0] ? UserDTO.fromEntity(result.rows[0]) : null;
 };
+
+exports.updateIsBlockedStatus = async (userId, status) => {
+    const connection = await getConnection();
+    await connection.execute(`UPDATE Users SET is_blocked = ${status} WHERE Id = ${userId}`, [], { autoCommit: true });
+};
+
+exports.updateUserRole = async (userId, role) => {
+    const connection = await getConnection();
+    const query = `
+        UPDATE Users
+        SET role = :role
+        WHERE Id = :userId
+    `;
+    const binds = {
+        userId,
+        role
+    };
+
+    try {
+        await connection.execute(query, binds, { autoCommit: true });
+        return true;
+    } catch (err) {
+        console.error("Error updating user role:", err);
+        throw new Error('Failed to update user role.');
+    }
+};
