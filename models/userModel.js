@@ -36,9 +36,10 @@ exports.getUsersPaginated = async (filter, filterBy, page = 0, size = 8) => {
     const totalQuery = `SELECT COUNT(*) FROM USERS WHERE 1=1`;
     const totalResult = await connection.execute(totalQuery);
 
+
     return {
         users,
-        totalPages: Math.ceil(totalResult.rows[0] / size)
+        totalPages: Math.ceil(totalResult.rows[0] / size),
     };
 };
 

@@ -1,11 +1,12 @@
 class UserDTO {
-    constructor({ id, name, surname, email, phoneNumber, password, role }) {
+    constructor({ id, name, surname, email, phoneNumber, password, imageUrl, role }) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
+        this.imageUrl = imageUrl;
         this.role = role;
     }
 
@@ -17,8 +18,13 @@ class UserDTO {
             email: userEntity[3],
             phoneNumber: userEntity[4],
             password: userEntity[5],
-            role: userEntity[6],
+            imageUrl: userEntity[6],
+            role: userEntity[7],
         });
+    }
+
+    static fromEntities(userEntities) {
+        return userEntities.map(user => this.fromEntity(user));
     }
 }
 

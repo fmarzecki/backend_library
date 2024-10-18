@@ -40,3 +40,17 @@ exports.changeUserPassword = async (req, res) => {
         return res.status(500).json({ message: 'Error changing user password', error });
     }
 }
+
+exports.changePasswordForUserId = async (req, res) => {
+    try {
+        let { userId, password } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        await updateUserPassword(userId, hashedPassword);
+        return res.status(200).json({ message: 'Password changed' });
+    }
+    catch (error) {
+        console.error('Error changing user password:', error);
+        return res.status(500).json({ message: 'Error changing user password', error });
+    }
+}
